@@ -52,6 +52,7 @@ func (w *wizard) makeGenesis() {
 	fmt.Println("Which consensus engine to use? (default = clique)")
 	fmt.Println(" 1. Ethash - proof-of-work")
 	fmt.Println(" 2. Clique - proof-of-authority")
+	fmt.Println(" 3. Yanzal - proof-of-stake")
 
 	choice := w.read()
 	switch {
@@ -97,6 +98,15 @@ func (w *wizard) makeGenesis() {
 		for i, signer := range signers {
 			copy(genesis.ExtraData[32+i*common.AddressLength:], signer[:])
 		}
+
+	case choice == "3":
+		fmt.Println("This Works")
+		genesis.Config.Yanzal = &params.YanzalConfig{
+			Length: 30,
+		}
+		fmt.Println()
+		fmt.Println("How many seconds should a validator be chosen take? (default = 30)")
+		genesis.Config.Yanzal.Length = uint64(w.readDefaultInt(30))
 
 	default:
 		log.Crit("Invalid consensus engine choice", "choice", choice)
